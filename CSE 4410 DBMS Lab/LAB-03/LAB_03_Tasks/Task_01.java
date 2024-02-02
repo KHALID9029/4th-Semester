@@ -4,37 +4,50 @@ public class Task_01
 {
     public static void main(String[] args)
     {
-        String sqlQuery = "Update department set budget=budget*0.9 where budget>99999";
-        String sql2 = "Select count(*) from department where budget<=99999";
+        String sqlQuery = "Select dept_name,budget from department";
         String name;
         int amount ;
         int count=0;
 
+        String Username = "cse4409";
+        String Password = "cse4409";
+        String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+
         try
         {
-            // 1) load the driver class
             Class . forName ("oracle.jdbc.driver.OracleDriver");
-
-            // 2) create the connection object
-            Connection con = DriverManager. getConnection ("jdbc:oracle:thin:@localhost:1521:xe", "cse4409", "cse4409");
+            Connection connection = DriverManager.getConnection(URL, Username, Password);
             System . out . println (" Connection to database successful ");
+            Statement statement = connection . createStatement ();
 
-            // 3) Create the Statement object
-            Statement statement = con . createStatement ();
 
-            // 4) Execute the query
-            ResultSet result = statement . executeQuery ( sql2);
+            ResultSet result = statement . executeQuery ( sqlQuery);
 
             while(result.next())
             {
-                System.out.println("Number of unaffected departments = "+result.getInt(1));
+                name= result.getString("dept_name");
+                amount = result.getInt("budget");
+                System.out.println("Department Name: "+name+" Budget: "+amount);
+                if(amount<=99999)
+                {
+                    count++;
+                }
+                else
+                {
+                    int increase=amount*10/100;
+                    amount=amount+increase;
+
+                    String sqlQuery2 = "UPDATE department SET budget = "+amount+" WHERE dept_name = '"+name+"'";
+                    Statement updatestatement = connection.createStatement();
+                    updatestatement.executeUpdate(sqlQuery2);
+                    System.out.println("New Budget of "+name+" is "+amount);
+                    updatestatement.close();
+                }
             }
 
-            statement.executeUpdate(sqlQuery);
+            System.out.println("Number of departments unaffected: "+count);
 
-
-            // 5) Close the connection object
-            con . close ();
+            connection . close ();
             statement . close ();
 
         }
