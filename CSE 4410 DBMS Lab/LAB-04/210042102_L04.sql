@@ -84,6 +84,8 @@ END;
 
 --3)
 DECLARE
+    name VARCHAR2(100);
+    
     CURSOR ROUTINE IS
         SELECT s.name, c.course_id, c.title, ts.day, ts.start_hr, ts.start_min, ts.end_hr, ts.end_min, sec.building, sec.room_number
         FROM student s
@@ -91,22 +93,26 @@ DECLARE
         LEFT JOIN section sec ON t.course_id = sec.course_id
         LEFT JOIN time_slot ts ON sec.time_slot_id = ts.time_slot_id
         LEFT JOIN course c ON sec.course_id = c.course_id
-        WHERE s.name = '&name'
+        WHERE s.name = name
         ORDER BY ts.day, ts.start_hr, ts.start_min;
 
 BEGIN
+    
+    name := '&name'; 
+
     FOR RE IN ROUTINE LOOP
-        DBMS_OUTPUT.PUT_LINE('Student Name: ' || re.name );
-        DBMS_OUTPUT.PUT_LINE('Course ID: ' || re.course_id );
-        DBMS_OUTPUT.PUT_LINE('Course Title: ' || re.title );
-        DBMS_OUTPUT.PUT_LINE('Day: ' || re.day );
-        DBMS_OUTPUT.PUT_LINE('Start Time: ' || re.start_hr || ':' || re.start_min );
-        DBMS_OUTPUT.PUT_LINE('End Time: ' || re.end_hr || ':' || re.end_min );
-        DBMS_OUTPUT.PUT_LINE('Building: ' || re.building);
-        DBMS_OUTPUT.PUT_LINE('Room Number: ' || re.room_number);
+        DBMS_OUTPUT.PUT_LINE('Student Name: ' || RE.name );
+        DBMS_OUTPUT.PUT_LINE('Course ID: ' || RE.course_id );
+        DBMS_OUTPUT.PUT_LINE('Course Title: ' || RE.title );
+        DBMS_OUTPUT.PUT_LINE('Day: ' || RE.day );
+        DBMS_OUTPUT.PUT_LINE('Start Time: ' || RE.start_hr || ':' || RE.start_min );
+        DBMS_OUTPUT.PUT_LINE('End Time: ' || RE.end_hr || ':' || RE.end_min );
+        DBMS_OUTPUT.PUT_LINE('Building: ' || RE.building);
+        DBMS_OUTPUT.PUT_LINE('Room Number: ' || RE.room_number);
     END LOOP;
 END;
 /
+
 
 
 
@@ -164,5 +170,50 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Instructor ' || instructor_name || ' still does not have any students assigned to them.');
         
     END LOOP;
+END;
+/
+
+
+
+
+--5)Insert a new instructor named ‘John Doe’ in the INSTRUCTOR table. The instructor should be enrolled in the department having the highest number of students. The ID of the instructor will be (X − 1), where X is the lowest ID value among the existing instructors. The salary of the instructor should be the average among all the instructors of the same department. Finally, print the information of the instructor.
+DECLARE
+    instructor_id instructor.ID%TYPE;
+    instructor_name instructor.name%TYPE;
+    instructor_dept instructor.dept_name%TYPE;
+    instructor_salary instructor.salary%TYPE;
+    instructor_avg_salary NUMBER;
+    instructor_new_id instructor.ID%TYPE;
+    instructor_new_salary instructor.salary%TYPE;
+    
+    CURSOR c_instructor IS
+        SELECT i.ID, i.name, i.dept_name, i.salary
+        FROM instructor i
+        LEFT JOIN student s ON i.dept_name = s.dept_name
+        GROUP BY i.ID, i.name, i.dept_name, i.salary
+        ORDER BY COUNT(s.ID) DESC;
+        
+    CURSOR c_instructor_salary IS
+        SELECT i.salary
+        FROM instructor i
+        WHERE i.dept_name = instructor_dept;
+
+BEGIN
+    OPEN c_instructor;
+    FETCH c_instructor INTO instructor_id, instructor_name, instructor_dept, instructor_salary;
+    CLOSE c_instructor;
+    
+    SELECT MIN(ID) - 1 INTO instructor_new_id FROM instructor;
+    
+    SELECT AVG(salary) INTO instructor_avg_salary
+    FROM instructor
+    WHERE dept_name = instructor_dept;
+    
+    INSERT INTO instructor VALUES (instructor_new_id, 'John Doe', instructor_dept, instructor_avg_salary);
+    
+    DBMS_OUTPUT.PUT_LINE('Instructor ID: ' || instructor_new_id);
+    DBMS_OUTPUT.PUT_LINE('Instructor Name: John Doe');
+    DBMS_OUTPUT.PUT_LINE('Instructor Department: ' || instructor_dept);
+    DBMS_OUTPUT.PUT_LINE('Instructor Salary: ' || instructor_avg_salary);
 END;
 /

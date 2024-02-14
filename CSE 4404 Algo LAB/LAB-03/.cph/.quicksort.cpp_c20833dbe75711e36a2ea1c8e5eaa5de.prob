@@ -1,0 +1,1 @@
+{"name":"Local: quicksort","url":"c:\\ClassResources Sem-04\\CSE 4404 Algo LAB\\LAB-03\\quicksort.cpp","tests":[{"id":1707107601820,"input":"5\n5 4 3 2 1","output":"1 2 3 4 5"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\ClassResources Sem-04\\CSE 4404 Algo LAB\\LAB-03\\quicksort.cpp","group":"local","local":true}
