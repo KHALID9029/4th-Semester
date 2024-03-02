@@ -1,0 +1,30 @@
+26/02/24
+
+Final-- Porda AI + Web extension = New web extension
+
+Our Next Job:
+1) How to build an extension
+2) Publish extension in web
+3) Build a simple extension---Web e dhukle amar nam dekhabe
+
+
+---Java script
+---Python
+ML- Open CV (For image)
+Audio niye vai kaj kore nai--Future Scope
+Video Rakhbo
+Image
+Suggested post, reels off theake
+Replacement
+All web not only facebook
+Zera Board Maintain korte hobe---Trailo Zera (User Story)
+
+
+Steps:
+Problem identification
+Brainstorming
+User Requirement Gathering
+Learning Stage/Knowledge gethering 
+Add features:
+Image hide
+Performane improve from Porda AI
