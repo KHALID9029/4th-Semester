@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "name": "My name Extension",
+    "description": "An Extension to show my name",
+    "version": "1.0",
+    "action": 
+    {
+      "default_popup": "khalid.html",
+      "default_icon": "khalid.png"
+    }
+  }
